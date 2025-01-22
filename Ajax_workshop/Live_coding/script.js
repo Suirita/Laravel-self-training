@@ -1,24 +1,35 @@
-document.getElementById("search").addEventListener("click", function () {
-  const username = document.getElementById("username").value;
-  const url = `https://api.github.com/users/${username}`;
+document.getElementById("load-html").addEventListener("click", function () {
+  // URL of the HTML page to fetch
+  const url = "page.html"; // Replace with your HTML file's path
 
+  // Fetch the HTML content
   fetch(url)
     .then((response) => {
       if (!response.ok) {
-        throw new Error("User not found");
+        throw new Error("Failed to fetch HTML content.");
       }
-      return response.json();
+      return response.text(); // Parse response as text
     })
-    .then((data) => {
-      document.getElementById("result").innerHTML = `
-        <h2>${data.name}</h2>
-        <img src="${data.avatar_url}" alt="${data.name}" width="100" />
-        <p>Followers: ${data.followers}</p>
-        <p>Following: ${data.following}</p>
-        <p>Public Repos: ${data.public_repos}</p>
-      `;
+    .then((html) => {
+      // Display the HTML content inside the modal
+      document.getElementById("modal-content").innerHTML = html;
+
+      // Show the modal and overlay
+      document.getElementById("modal").style.display = "block";
+      document.getElementById("modal-overlay").style.display = "block";
     })
     .catch((error) => {
-      document.getElementById("result").innerHTML = `<p>${error.message}</p>`;
+      console.error("Error:", error);
     });
+});
+
+// Close the modal when the overlay or button is clicked
+document.querySelector(".close-btn").addEventListener("click", function () {
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-overlay").style.display = "none";
+});
+
+document.getElementById("modal-overlay").addEventListener("click", function () {
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-overlay").style.display = "none";
 });
